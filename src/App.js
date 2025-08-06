@@ -7,7 +7,6 @@ function App() {
   const [useCamera, setUseCamera] = useState(false);
 
   const videoRef = useRef(null);
-  const canvasRef = useRef(null);
 
   // Démarrer la caméra
   const startCamera = async () => {
@@ -23,38 +22,17 @@ function App() {
     }
   };
 
-  // Capturer une photo et redimensionner + vérifier luminosité
+  // Capturer une photo (directement, sans traitement)
   const capturePhoto = () => {
     if (!videoRef.current) return;
 
-    const targetWidth = 128;
-    const targetHeight = 128;
+    const canvas = document.createElement("canvas");
+    canvas.width = videoRef.current.videoWidth;
+    canvas.height = videoRef.current.videoHeight;
+    const context = canvas.getContext("2d");
+    context.drawImage(videoRef.current, 0, 0);
 
-    const tempCanvas = document.createElement("canvas");
-    tempCanvas.width = targetWidth;
-    tempCanvas.height = targetHeight;
-    const tempContext = tempCanvas.getContext("2d");
-
-    // Dessiner et redimensionner l'image
-    tempContext.drawImage(videoRef.current, 0, 0, targetWidth, targetHeight);
-
-    // Vérification de luminosité moyenne
-    const imageData = tempContext.getImageData(0, 0, targetWidth, targetHeight);
-    const data = imageData.data;
-    let sum = 0;
-    for (let i = 0; i < data.length; i += 4) {
-      const r = data[i];
-      const g = data[i + 1];
-      const b = data[i + 2];
-      sum += (r + g + b) / 3;
-    }
-    const brightness = sum / (targetWidth * targetHeight);
-    if (brightness < 50) {
-      alert("Photo trop sombre, essaye dans un endroit mieux éclairé.");
-    }
-
-    // Conversion en blob pour envoi
-    tempCanvas.toBlob((blob) => {
+    canvas.toBlob((blob) => {
       setSelectedImage(new File([blob], "capture.jpg", { type: "image/jpeg" }));
       setUseCamera(false);
 
@@ -81,7 +59,6 @@ function App() {
       const base64Image = reader.result.split(",")[1];
       setLoading(true);
       try {
-        //const res = await fetch("http://127.0.0.1:5000/predict", {
         const res = await fetch("https://skindetectionapi-1.onrender.com/predict", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -106,12 +83,7 @@ function App() {
         <>
           <button onClick={startCamera}>📷 Prendre une photo</button>
           <p>ou</p>
-          <input
-            type="file"
-            accept="image/*"
-            capture="environment"
-            onChange={handleFileChange}
-          />
+          <input type="file" accept="image/*" capture="environment" onChange={handleFileChange} />
         </>
       )}
 
@@ -124,12 +96,6 @@ function App() {
             width="300"
             height="225"
             style={{ border: "1px solid #ccc" }}
-          />
-          <canvas
-            ref={canvasRef}
-            width="300"
-            height="225"
-            style={{ display: "none" }}
           />
           <div style={{ marginTop: 10 }}>
             <button onClick={capturePhoto}>Capturer</button>
@@ -160,8 +126,7 @@ function App() {
             <strong>Classe :</strong> {prediction.class_name}
           </p>
           <p>
-            <strong>Confiance :</strong>{" "}
-            {(prediction.confidence * 100).toFixed(2)}%
+            <strong>Confiance :</strong> {(prediction.confidence * 100).toFixed(2)}%
           </p>
         </div>
       )}
