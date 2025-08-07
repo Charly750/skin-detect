@@ -75,13 +75,13 @@ function Home() {
 
       {!useCamera && (
         <div className="flex flex-col items-center gap-4">
-          <button
+{/*           <button
             onClick={startCamera}
             className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
           >
             📷 Prendre une photo
           </button>
-          <p className="text-gray-500 text-sm">ou</p>
+          <p className="text-gray-500 text-sm">ou</p> */}
           <input
             type="file"
             accept="image/*"
@@ -130,7 +130,7 @@ function Home() {
               : "bg-blue-600 hover:bg-blue-700"
           }`}
         >
-          {loading ? "Analyse en cours..." : "Envoyer à l'API"}
+          {loading ? "Analyse en cours..." : "Analyser la photo"}
         </button>
       </div>
 
