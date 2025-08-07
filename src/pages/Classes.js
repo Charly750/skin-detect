@@ -7,10 +7,18 @@ const Classes = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const res = await fetch("https://skindetectionapi-1.onrender.com/classes"); // ➜ adapte l'URL à ton API
+        console.log("Chargement des classes...");
+        
+        const res = await fetch("https://skindetectionapi-1.onrender.com/classes", {
+          method: "GET",
+       
+        }); // ➜ adapte l'URL à ton API
         const data = await res.json();
+        console.log("Classes data:", data);
+        
         setClassesData(data);
       } catch (error) {
+        console.log(error);
         console.error("Erreur lors du chargement des classes :", error);
       } finally {
         setLoading(false);
