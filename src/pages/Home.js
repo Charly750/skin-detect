@@ -143,6 +143,9 @@ function Home() {
           <p className="text-gray-800">
             <strong>Confiance :</strong> {(prediction.confidence * 100).toFixed(2)}%
           </p>
+            <p className="text-gray-800">
+            <strong>Description :</strong> {(prediction.description)}%
+          </p>
         </div>
       )}
     </div>
