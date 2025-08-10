@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import Classes from "./Classes";
 
 function Home() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -64,8 +65,8 @@ function Home() {
   };
 
   return (
-    <div className="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-md mt-8">
-      <h1 className="text-2xl font-bold text-center mb-2 text-indigo-600">
+<div className="max-w-3xl min-h-[600px] mx-auto bg-white p-6 rounded-xl shadow-md mt-8">
+          <h1 className="text-2xl font-bold text-center mb-2 text-indigo-600">
         Détection de lésions cutanées
       </h1>
       <p className="text-center text-sm text-gray-600 mb-6">
@@ -148,7 +149,9 @@ function Home() {
           </p>
         </div>
       )}
+      
     </div>
+  
   );
 }
 
